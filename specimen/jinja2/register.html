@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>帐号注册</title>
+    <!-- CSS files -->
+    <link href="{{ static('css/tabler.min.css') }}" rel="stylesheet"/>
+    <style>
+      :root {
+      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+      	font-feature-settings: "cv03", "cv04", "cv11";
+      }
+    </style>
+  </head>
+  <body  class=" d-flex flex-column">
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+          <a href="." class="navbar-brand navbar-brand-autodark">
+            <img src="{{ static('img/logo.png') }}" width="110" height="110" alt="GuoLab" class="">
+          </a>
+        </div>
+        <form id="register-form" class="card card-md" action="{{ url('register') }}" method="post" autocomplete="off" novalidate>
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">注册帐号</h2>
+            <div class="mb-3">
+              <label class="form-label">用户名</label>
+              <input type="text" class="form-control" name="username">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">邮箱地址</label>
+              <input type="email" class="form-control" name="useremail">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">真实姓名</label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="userlast" placeholder="姓氏">
+                <input type="text" class="form-control" name="userfirst" placeholder="名字">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">设置密码</label>
+              <input type="password" class="form-control" name="userpass">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">确认密码</label>
+              <input type="password" class="form-control" name="passok">
+            </div>
+            <div class="form-footer">
+              <button type="submit" class="btn btn-primary w-100">提交</button>
+            </div>
+          </div>
+          {{ csrf_input }}
+        </form>
+        <div class="text-center text-secondary mt-3">
+          已有帐号? <a href="{{ url('login') }}" tabindex="-1">登录</a>
+        </div>
+      </div>
+    </div>
+    <script src="{{ static('js/tabler.min.js') }}"></script>
+    <script src="{{ static('js/jquery.min.js') }}"></script>
+    <script src="{{ static('js/jquery.validate.min.js') }}"></script>
+    <script type="text/javascript">
+      $('#register-form').validate({
+        errorClass: 'is-invalid',
+        validClass: 'is-valid',
+        rules: {
+          username: {
+            required: true,
+            minlength: 4,
+            remote: {
+              url: "{{ url('validate') }}",
+              type: "post",
+              headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+              data: {
+                username: function() {
+                  return $('input[name=username]').val();
+                }
+              }
+            }
+          },
+          useremail: {
+            required: true,
+            email: true,
+            remote: {
+              url: "{{ url('validate') }}",
+              type: "post",
+              headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+              data: {
+                useremail: function() {
+                  return $('input[name=useremail]').val();
+                }
+              }
+            }
+          },
+          userfirst: {
+            required: true
+          },
+          userlast: {
+            required: true
+          },
+          userpass: {
+            required: true,
+            minlength: 6
+          },
+          passok: {
+            required: true,
+            minlength: 6,
+            equalTo: $('input[name=userpass]'), 
+          }
+        },
+        messages: {
+          username: {
+            remote: "The name is already in use."
+          },
+          useremail: {
+            remote: "The email is already in use."
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
