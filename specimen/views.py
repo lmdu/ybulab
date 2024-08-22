@@ -1,5 +1,6 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -75,6 +76,22 @@ def validate(request):
 
 def reset(request):
 	pass
+
+def species(request):
+	term = request.GET.get('term')
+
+	if not term:
+		return JsonResponse({})
+
+	rows = Species.objects.filter(Q(species_cn__icontains=term)|Q(species_en__icontains=term))[:50]
+	items = [{'id': row.pk, 'text': "{} {}".format(row.species_en, row.species_cn)} for row in rows]
+	return JsonResponse({
+		'results': items,
+		'pagination': {
+			'more': False
+		}
+	})
+
 
 def sample(request, action):
 	if not request.user.is_authenticated:

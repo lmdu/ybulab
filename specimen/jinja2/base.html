@@ -15,6 +15,7 @@
       	font-feature-settings: "cv03", "cv04", "cv11";
       }
     </style>
+    {% block head %}{% endblock %}
   </head>
   <body >
     <div class="page">
@@ -145,7 +146,7 @@
         <!-- Page body -->
         <div class="page-body">
           <div class="container-xl">
-            <!-- Content here -->
+            {% block main %}{% endblock %}
           </div>
         </div>
         <footer class="footer footer-transparent d-print-none">
@@ -185,5 +186,7 @@
       </div>
     </div>
     <script src="{{ static('js/tabler.min.js') }}"></script>
+    <script src="{{ static('js/jquery.min.js') }}"></script>
+    {% block script %}{% endblock %}
   </body>
 </html>
