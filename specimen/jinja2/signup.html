@@ -24,31 +24,35 @@
             <img src="{{ static('img/logo.png') }}" width="110" height="110" alt="GuoLab" class="">
           </a>
         </div>
-        <form id="register-form" class="card card-md" action="{{ url('register') }}" method="post" autocomplete="off" novalidate>
+        <form id="register-form" class="card card-md" action="{{ url('signup') }}" method="post" autocomplete="off" novalidate>
           <div class="card-body">
             <h2 class="card-title text-center mb-4">注册帐号</h2>
             <div class="mb-3">
               <label class="form-label">用户名</label>
-              <input type="text" class="form-control" name="username">
+              <input type="text" class="form-control" name="username" placeholder="用户名">
             </div>
             <div class="mb-3">
               <label class="form-label">邮箱地址</label>
-              <input type="email" class="form-control" name="useremail">
+              <input type="email" class="form-control" name="useremail" placeholder="邮箱">
             </div>
             <div class="mb-3">
               <label class="form-label">真实姓名</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="userlast" placeholder="姓氏">
-                <input type="text" class="form-control" name="userfirst" placeholder="名字">
+              <div class="row g-2">
+                <div class="col-6">
+                  <input type="text" class="form-control" name="userlast" placeholder="姓氏">
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" name="userfirst" placeholder="名字">
+                </div>
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">设置密码</label>
-              <input type="password" class="form-control" name="userpass">
+              <input type="password" class="form-control" name="userpass" placeholder="密码">
             </div>
             <div class="mb-3">
               <label class="form-label">确认密码</label>
-              <input type="password" class="form-control" name="passok">
+              <input type="password" class="form-control" name="passok" placeholder="重复密码">
             </div>
             <div class="form-footer">
               <button type="submit" class="btn btn-primary w-100">提交</button>
@@ -57,7 +61,7 @@
           {{ csrf_input }}
         </form>
         <div class="text-center text-secondary mt-3">
-          已有帐号? <a href="{{ url('login') }}" tabindex="-1">登录</a>
+          已有帐号? <a href="{{ url('signin') }}" tabindex="-1">登录</a>
         </div>
       </div>
     </div>
@@ -66,6 +70,9 @@
     <script src="{{ static('js/jquery.validate.min.js') }}"></script>
     <script type="text/javascript">
       $('#register-form').validate({
+        normalizer: function(value) {
+          return $.trim(value);
+        },
         errorClass: 'is-invalid',
         validClass: 'is-valid',
         rules: {
@@ -110,7 +117,7 @@
           passok: {
             required: true,
             minlength: 6,
-            equalTo: $('input[name=userpass]'), 
+            equalTo: $('input[name=userpass]'),
           }
         },
         messages: {

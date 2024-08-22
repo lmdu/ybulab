@@ -29,10 +29,10 @@
           <h3 class="h3 text-center mb-3">
             样本管理系统
           </h3>
-          <form action="{{ url('login') }}" method="post" autocomplete="off" novalidate>
+          <form id="login-form" action="{{ url('signin') }}" method="post" autocomplete="off" novalidate>
             <div class="mb-3">
-              <label class="form-label">用户名或邮箱</label>
-              <input type="text" class="form-control" name="userid" placeholder="" autocomplete="off">
+              <label class="form-label">帐号</label>
+              <input type="text" class="form-control" name="userid" placeholder="用户名或邮箱" autocomplete="off">
             </div>
             <div class="mb-2">
               <label class="form-label">
@@ -41,14 +41,7 @@
                   <a href="./forgot-password.html">忘记密码</a>
                 </span>
               </label>
-              <div class="input-group input-group-flat">
-                <input type="password" class="form-control" name="userpass" placeholder=""  autocomplete="off">
-                <span class="input-group-text">
-                  <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                  </a>
-                </span>
-              </div>
+              <input type="password" class="form-control" name="userpass" placeholder="密码"  autocomplete="off">
             </div>
             <div class="form-footer">
               <button type="submit" class="btn btn-primary w-100">登录</button>
@@ -56,8 +49,26 @@
             {{ csrf_input }}
           </form>
           <div class="text-center text-secondary mt-3">
-            没有帐号? <a href="{{ url('register') }}" tabindex="-1">注册</a>
+            没有帐号? <a href="{{ url('signup') }}" tabindex="-1">注册</a>
           </div>
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-important alert-danger alert-dismissible mt-2" role="alert">
+            <div class="d-flex">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div>{{ message }}</div>
+            </div>
+            <a class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="close"></a>
+          </div>
+          {% endfor %}
+          {% endif %}
         </div>
       </div>
       <div class="col-12 col-lg-6 col-xl-8 d-none d-lg-block">
@@ -67,6 +78,27 @@
     </div>
     <!-- Libs JS -->
     <!-- Tabler Core -->
-    <script src="{{ static('js/tabler.min.js') }}" defer></script>
+    <script src="{{ static('js/tabler.min.js') }}"></script>
+    <script src="{{ static('js/jquery.min.js') }}"></script>
+    <script src="{{ static('js/jquery.validate.min.js') }}"></script>
+    <script type="text/javascript">
+      $('#login-form').validate({
+        normalizer: function(value) {
+          return $.trim(value);
+        },
+        errorClass: 'is-invalid',
+        validClass: 'is-valid',
+        rules: {
+          userid: {
+            required: true,
+            minlength: 4,
+          },
+          userpass: {
+            required: true,
+            minlength: 6
+          }
+        }
+      });
+    </script>
   </body>
 </html>

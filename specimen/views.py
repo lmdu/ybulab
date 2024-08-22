@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -9,35 +11,54 @@ from .models import *
 def index(request):
 	if request.user.is_authenticated:
 		return render(request, 'index.html')
-	
-	return redirect('login')
+	else:
+		return redirect('signin')
 
-def login(request):
+def signin(request):
 	if request.user.is_authenticated:
 		return redirect('index')
 	elif request.method == 'GET':
-		return render(request, 'login.html')
+		return render(request, 'signin.html')
 	elif request.method == 'POST':
 		user_id = request.POST.get('userid')
 		user_pwd = request.POST.get('userpass')
 
-		print("user name: ", user_id, "user password: ", user_pwd)
+		user = None
+		if '@' in user_id:
+			user = authenticate(email=user_id, password=user_pwd)
 
-def register(request):
+		if not user:
+			user = authenticate(username=user_id, password=user_pwd)
+
+		if user:
+			login(request, user)
+			return redirect('index')
+		else:
+			messages.error(request, "帐号或密码错误")
+			return redirect('signin')
+
+def signout(request):
+	if request.user.is_authenticated:
+		logout(request)
+		return redirect('signin')
+
+def signup(request):
 	if request.user.is_authenticated:
 		return redirect('index')
 	elif request.method == 'GET':
-		return render(request, 'register.html')
+		return render(request, 'signup.html')
 	elif request.method == 'POST':
 		user = User.objects.create_user(
 			username = request.POST.get('username'),
 			password = request.POST.get('userpass'),
-			email = request.POST.get('useremail')
+			email = request.POST.get('useremail'),
+			first_name = request.POST.get('userfirst'),
+			last_name = request.POST.get('userlast')
 		)
-		user.profile.real = request.POST.get('userreal')
-		user.save()
+		#user.profile.real = request.POST.get('userreal')
+		#user.save()
 
-		return redirect('login')
+		return redirect('signin')
 
 def validate(request):
 	if request.method == 'POST':
@@ -54,3 +75,26 @@ def validate(request):
 
 def reset(request):
 	pass
+
+def sample(request, action):
+	if not request.user.is_authenticated:
+		return redirect('login')
+
+	if action == 'list':
+		return render(request, 'sample-list.html')
+
+	elif action == 'add':
+		if request.method == 'GET':
+			return render(request, 'sample-add.html')
+		elif request.method == 'POST':
+			pass
+
+	elif action == 'edit':
+		pass
+
+	elif action == 'delete':
+		pass
+
+
+
+

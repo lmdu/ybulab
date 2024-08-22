@@ -10,8 +10,8 @@ from jinja2 import Environment
 
 def cravatar(email, size=40):
     return "https://cravatar.cn/avatar/{}?{}".format(
-        hashlib.md5(email.lower()).hexdigest(),
-        urllib.urlencode({'s': str(size)})
+        hashlib.md5(email.lower().encode('utf-8')).hexdigest(),
+        urllib.parse.urlencode({'s': str(size)})
     )
 
 def environment(**options):
