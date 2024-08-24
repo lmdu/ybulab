@@ -1,0 +1,45 @@
+{% set mainmenu="sample" %}
+{% extends "base.html" %}
+{% block title %}样本列表{% endblock %}
+{% block head %}
+<!--<link href="{{ static('css/datatables.min.css') }}" rel="stylesheet">-->
+{% endblock %}
+{% block main %}
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title"><strong>样本列表</strong></h3>
+			</div>
+			<div class="table-responsive">
+				<table class="table card-table table-vcenter text-nowrap" id="sample-table">
+					<thead>
+						<tr>
+							<th class="fs-4">ID</th>
+							<th class="fs-4">样本编号</th>
+							<th class="fs-4">样本名称</th>
+							<th class="fs-4">物种名称</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{{ static('js/datatables.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#sample-table').DataTable({
+		processing: true,
+		serverSide: true,
+		ajax: {
+			url: "{{ url('sample', kwargs={'action': 'list'}) }}",
+			type: 'POST',
+			headers: {'X-CSRFToken': '{{ csrf_token }}'}
+		}
+	});
+});
+</script>
+{% endblock %}

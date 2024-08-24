@@ -70,11 +70,9 @@ def save_user_profile(sender, instance, **kwargs):
 	instance.profile.save()
 
 class Resource(models.Model):
-	content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-	object_id = models.PositiveIntegerField()
-	content_object = GenericForeignKey('content_type', 'object_id')
-	file = models.FileField(upload_to='uploads/%Y/%m/%d/')
-	ftype = models.SmallIntegerField()
+	upfile = models.FileField(upload_to='uploads/%Y/%m/%d/')
+	uptype = models.SmallIntegerField()
+	uptime = models.DateTimeField(auto_now_add=True)
 
 class Species(models.Model):
 	species_en = models.CharField(max_length=100)
@@ -118,21 +116,23 @@ class Specimen(models.Model):
 
 
 class Sample(models.Model):
-	species = models.ForeignKey(Species, on_delete=models.CASCADE)
-	code = models.CharField(max_length=30, blank=True)
-	name = models.CharField(max_length=50, blank=True)
-	tissue = models.CharField(max_length=30, blank=True)
+	sample_code = models.CharField(max_length=30, blank=True)
+	sample_name = models.CharField(max_length=50, blank=True)
+	sample_type = models.CharField(max_length=30, blank=True)
+	sample_tissue = models.CharField(max_length=30, blank=True)
 	collect_location = models.CharField(max_length=200, blank=True)
 	collect_longitude = models.CharField(max_length=20, blank=True)
 	collect_latitude = models.CharField(max_length=20, blank=True)
+	collect_altitude = models.CharField(max_length=20, blank=True)
 	collect_people = models.CharField(max_length=100, blank=True)
-	collect_time = models.DateField(blank=True)
+	collect_date = models.DateField(blank=True)
 	store_place = models.CharField(max_length=100)
 	store_method = models.CharField(max_length=100)
 	comment = models.TextField(blank=True)
+	photos = models.JSONField(blank=True, default=[])
+	attachments = models.JSONField(blank=True, default=[])
+	species = models.ForeignKey(Species, on_delete=models.CASCADE)
 	creator = models.ForeignKey(User, on_delete=models.CASCADE)
-	photos = GenericRelation(Resource)
-	files = GenericRelation(Resource)
 	updated = models.DateTimeField(auto_now=True)
 	created = models.DateTimeField(auto_now_add=True)
 

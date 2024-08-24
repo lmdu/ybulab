@@ -10,5 +10,6 @@ urlpatterns = [
 	path('reset', views.reset, name='reset'),
 	path('validate', views.validate, name='validate'),
 	path('species', views.species, name='species'),
+	path('upload', views.upload, name='upload'),
 	path('sample/<action>', views.sample, name='sample'),
 ]

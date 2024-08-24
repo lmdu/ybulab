@@ -3,63 +3,128 @@
 {% block title %}添加样本{% endblock %}
 {% block head %}
 <link href="{{ static('css/select2.min.css') }}" rel="stylesheet"/>
+<link href="{{ static('css/dropzone.min.css') }}" rel="stylesheet"/>
+<link href="{{ static('css/tabler-vendors.min.css') }}" rel="stylesheet">
 {% endblock %}
 {% block main %}
-<form action="{{ url('sample', kwargs={'action': 'add'}) }}" method="post" class="card">
+<form action="{{ url('sample', kwargs={'action': 'add'}) }}" id="sample-form" method="post" class="card">
 	<div class="card-header">
-		<h3 class="card-title">添加样本</h3>
+		<h2 class="card-title"><strong>添加样本</strong></h2>
 	</div>
 	<div class="card-body">
 		<div class="row row-cards">
-			<h3 class="card-title mt-3">基本信息</h3>
-			<div class="col-md-2 col-sm-4">
-				<label class="form-label">样本编号</label>
-				<input type="text" name="samplecode" class="form-control">
+			<h3 class="card-title mb-0 mt-3"><strong>基本信息</strong></h3>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label required">样本编号</label>
+					<input type="text" name="sample_code" class="form-control">
+				</div>
 			</div>
-			<div class="col-md-2 col-sm-4">
-				<label class="form-label">样本名称</label>
-				<input type="text" name="samplename" class="form-control">
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label required">样本名称</label>
+					<input type="text" name="sample_name" class="form-control">
+				</div>
 			</div>
-			<div class="col-md-2 col-sm-4">
-				<label class="form-label">来源组织</label>
-				<input type="text" name="sampletissue" class="form-control">
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">样本类型</label>
+					<input type="text" name="sample_type" class="form-control">
+				</div>
 			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">来源组织</label>
+					<input type="text" name="sample_tissue" class="form-control">
+				</div>
+			</div>
+			<div class="col-md-12 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label required">来源物种</label>
+					<select class="form-control form-select" id="species-select" name="species"></select>
+				</div>
+			</div>
+			<h3 class="card-title mb-0 mt-3"><strong>采样信息</strong></h3>
 			<div class="col-md-6 col-sm-12">
-				<label class="form-label">来源物种</label>
-				<select class="form-control form-select" id="species-select"></select>
+				<div class="mb-3">
+					<label class="form-label">采样地点</label>
+					<input type="text" name="collect_location" class="form-control">
+				</div>
 			</div>
-			<h3 class="card-title mt-3">采样信息</h3>
+			<div class="col-md-2 col-sm-4">
+				<div class="mb-3">
+					<label class="form-label">经度</label>
+					<input type="text" name="collect_longitude" class="form-control">
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-4">
+				<div class="mb-3">
+					<label class="form-label">纬度</label>
+					<input type="text" name="collect_latitude" class="form-control">
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-4">
+				<div class="mb-3">
+					<label class="form-label">海拔</label>
+					<input type="text" name="collect_altitude" class="form-control">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">采样人员</label>
+					<input type="text" name="collect_people" class="form-control">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">采样时间</label>
+					<div class="input-icon mb-2">
+            <input type="date" class="form-control" name="collect_date">
+          </div>
+				</div>
+			</div>
+			<h3 class="card-title mb-0 mt-3"><strong>保存信息</strong></h3>
 			<div class="col-md-6 col-sm-12">
-				<label class="form-label">采样地点</label>
-				<input type="text" name="samplecode" class="form-control">
+				<div class="mb-3">
+					<label class="form-label">存放地点</label>
+					<input type="text" name="store_place" class="form-control">
+				</div>
 			</div>
 			<div class="col-md-3 col-sm-6">
-				<label class="form-label">经度</label>
-				<input type="text" name="samplename" class="form-control">
+				<div class="mb-3">
+					<label class="form-label">保存方法</label>
+					<input type="text" name="store_method" class="form-control">
+				</div>
 			</div>
-			<div class="col-md-3 col-sm-6">
-				<label class="form-label">纬度</label>
-				<input type="text" name="sampletissue" class="form-control">
+			<div class="col-md-12 col-sm-12">
+				<div class="mb-3">
+					<h3 class="card-title mt-3"><strong>备注信息</strong></h3>
+					<textarea id="tinymce-default" name="comment"></textarea>
+				</div>
 			</div>
-			<div class="col-md-3 col-sm-6">
-				<label class="form-label">采样人员</label>
-				<input type="text" name="sampletissue" class="form-control">
+			<div class="col-md-12 col-sm-12">
+				<div class="mb-3">
+					<h3 class="card-title mt-3"><strong>图片和附件文件</strong></h3>
+					<div class="dropzone" id="dropzone-images">
+						<div class="fallback">
+							<input type="file" multiple />
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="col-md-3 col-sm-6">
-				<label class="form-label">采样时间</label>
-				<div class="input-icon mb-2">
-                  <input class="form-control" placeholder="Select a date" id="datepicker-icon" value="2020-06-20">
-                  <span class="input-icon-addon"><!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
-                  </span>
-                </div>
-			</div>
+			{{ csrf_input }}
 		</div>
+	</div>
+	<div class="card-footer text-end">
+		<button type="submit" class="btn btn-primary">提交</button>
 	</div>
 </form>
 {% endblock %}
 {% block script %}
 <script src="{{ static('js/select2.min.js') }}"></script>
+<script src="{{ static('js/dropzone.min.js') }}"></script>
+<script src="{{ static('js/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ static('js/jquery.validate.min.js') }}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#species-select').select2({
@@ -77,6 +142,62 @@
 				},
 			}
 		});
+
+		$("#dropzone-images").dropzone({
+			url: "{{ url('upload') }}",
+			addRemoveLinks: true,
+			headers: {
+				'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+			},
+			init: function(){
+				this.on('success', function(file, data) {
+					$('<input>').appendTo('#sample-form')
+						.attr({
+							'type': 'hidden',
+							'id': file.upload.uuid,
+							'name': data.type,
+							'value': data.id,
+						});
+				});
+
+				this.on('removedfile', function(file) {
+					$('#'+file.upload.uuid).remove();
+				});
+			}
+		});
+
+		$('#sample-form').validate({
+        normalizer: function(value) {
+          return $.trim(value);
+        },
+        errorClass: 'is-invalid',
+        validClass: 'is-valid',
+        rules: {
+          sample_code: {
+            required: true,
+          },
+          sample_name: {
+            required: true,
+          },
+          species: {
+          	required: true,
+          }
+        }
+      });
 	});
+
+	document.addEventListener("DOMContentLoaded", function() {
+    tinyMCE.init({
+      selector: '#tinymce-default',
+      height: 300,
+      menubar: false,
+      statusbar: false,
+      plugins: 'advlist autolink lists link table',
+      toolbar: 'undo redo | formatselect | ' +
+        'bold italic backcolor | alignleft aligncenter ' +
+        'alignright alignjustify | bullist numlist outdent indent | ' +
+        'link table | removeformat' 
+    });
+  });
 </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
@@ -6,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
+from .forms import *
 from .models import *
 
 # Create your views here.
@@ -92,19 +94,74 @@ def species(request):
 		}
 	})
 
+@login_required
+def upload(request):
+	if request.method == 'POST':
+		upfile = request.FILES.get('file')
+		uptype = 0
+		if upfile.content_type.startswith('image'):
+			uptype = 1
+
+		r = Resource.objects.create(
+			upfile = upfile,
+			uptype = uptype
+		)
+
+		return JsonResponse({'id': r.pk, 'type': 'photos' if uptype else 'attachments'})
 
 def sample(request, action):
 	if not request.user.is_authenticated:
-		return redirect('login')
+		return redirect('signin')
 
 	if action == 'list':
-		return render(request, 'sample-list.html')
+		if request.method == 'GET':
+			return render(request, 'sample-list.html')
+
+		elif request.method == 'POST':
+			start = int(request.POST.get('start'))
+			length = int(request.POST.get('length'))
+			term = request.POST.get('search[value]').strip()
+
+			samples = Sample.objects.all()
+			total_count = samples.count()
+			filter_count = total_count
+
+			if term:
+				samples = samples.filter(
+					Q(sample_code__icontains = term) |
+					Q(sample_name__icontains = term) |
+					Q(sample_tissue__icontains = term) |
+					Q(collect_location__icontains = term) |
+					Q(collect_people__icontains = term) |
+					Q(store_place__icontains = term) |
+					Q(species__species_en__icontains = term) |
+					Q(species__species_cn__icontains = term)
+				)
+				filter_count = samples.count()
+
+			rows = [[s.id, s.sample_code, s.sample_name, s.species.species_en] \
+				for s in samples[start:start+length]]
+
+			return JsonResponse({
+				'draw': 1,
+				'recordsTotal': total_count,
+				'recordsFiltered': filter_count,
+				'data': rows
+			})
+
 
 	elif action == 'add':
 		if request.method == 'GET':
 			return render(request, 'sample-add.html')
+
 		elif request.method == 'POST':
-			pass
+			form = SampleForm(request.POST)
+			if form.is_valid():
+				s = form.save(commit=False)
+				s.creator = request.user
+				s.save()
+
+				return redirect(reverse('sample', kwargs={'action': 'list'}))
 
 	elif action == 'edit':
 		pass

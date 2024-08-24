@@ -5,21 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>{% block title %}{% endblock %}</title>
-    <!-- CSS files -->
     <link href="{{ static('css/tabler.min.css') }}" rel="stylesheet"/>
-    <style>
-      :root {
-      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
-      }
-      body {
-      	font-feature-settings: "cv03", "cv04", "cv11";
-      }
-    </style>
     {% block head %}{% endblock %}
   </head>
   <body >
     <div class="page">
-      <!-- Navbar -->
       <header class="navbar navbar-expand-md d-print-none" >
         <div class="container-xl">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +54,7 @@
                     </span>
                   </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if mainmenu == 'sample' %}active{% endif %}">
                   <a class="nav-link" href="">
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" /><path d="M12 12l8 -4.5" /><path d="M12 12l0 9" /><path d="M12 12l-8 -4.5" /><path d="M16 5.25l-8 4.5" /></svg>
@@ -131,7 +121,7 @@
         </div>
       </header>
       <div class="page-wrapper">
-        <!-- Page header -->
+        <!-- 
         <div class="page-header d-print-none">
           <div class="container-xl">
             <div class="row g-2 align-items-center">
@@ -142,8 +132,7 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- Page body -->
+        </div> -->
         <div class="page-body">
           <div class="container-xl">
             {% block main %}{% endblock %}
