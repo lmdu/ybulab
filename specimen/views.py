@@ -118,10 +118,14 @@ def sample(request, action):
 			return render(request, 'sample-list.html')
 
 		elif request.method == 'POST':
-			start = int(request.POST.get('start'))
-			length = int(request.POST.get('length'))
-			term = request.POST.get('search[value]').strip()
+			draw = int(request.POST.get('draw'))
+			start = int(request.POST.get('start', 0))
+			length = int(request.POST.get('length', 10))
 
+			if length == -1:
+				length = 10
+
+			term = request.POST.get('search[value]', '').strip()
 			samples = Sample.objects.all()
 			total_count = samples.count()
 			filter_count = total_count
@@ -143,7 +147,7 @@ def sample(request, action):
 				for s in samples[start:start+length]]
 
 			return JsonResponse({
-				'draw': 1,
+				'draw': draw,
 				'recordsTotal': total_count,
 				'recordsFiltered': filter_count,
 				'data': rows
