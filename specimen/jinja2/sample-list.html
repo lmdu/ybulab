@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 {% block title %}样本列表{% endblock %}
 {% block head %}
-<link href="{{ static('css/datatables.min.css') }}" rel="stylesheet">
+<!--<link href="{{ static('css/datatables.min.css') }}" rel="stylesheet">-->
 {% endblock %}
 {% block main %}
 <div class="row">
@@ -11,44 +11,17 @@
 			<div class="card-header">
 				<h3 class="card-title"><strong>样本列表</strong></h3>
 			</div>
-			<div class="card-body border-bottom py-3">
-				<div class="d-flex">
-					<div class="text-secondary">
-						显示
-						<div class="mx-2 d-inline-block">
-							<select class="form-control form-select form-select-sm">
-								<option value="10">10</option>
-								<option value="25">25</option>
-								<option value="10">50</option>
-								<option value="25">100</option>
-							</select>
-						</div>
-						行
-					</div>
-					<div class="ms-auto text-secondary">
-						搜索
-						<div class="ms-2 d-inline-block">
-							<input type="text" class="form-control form-control-sm">
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="table-responsive">
-				<table class="table card-table table-vcenter text-nowrap" id="sample-table">
-					<thead>
-						<tr>
-							<th class="fs-4">ID</th>
-							<th class="fs-4">样本编号</th>
-							<th class="fs-4">样本名称</th>
-							<th class="fs-4">物种名称</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-			<div class="card-footer d-flex align-items-center">
-				<p class="m-0 text-secondary"></p>
-				<ul class="pagination m-0 ms-auto"></ul>
-			</div>
+			<table class="table card-table table-vcenter text-nowrap" id="sample-table">
+				<thead>
+					<tr>
+						<th class="fs-4">ID</th>
+						<th class="fs-4">样本编号</th>
+						<th class="fs-4">样本名称</th>
+						<th class="fs-4">物种拉丁名</th>
+						<th class="fs-4">物种中文名</th>
+					</tr>
+				</thead>
+			</table>
 		</div>
 	</div>
 </div>
@@ -58,13 +31,11 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#sample-table').DataTable({
-		info: false,
-		lengthChange: false,
-		searching: false,
-		paging: false,
 		processing: true,
 		serverSide: true,
-		odering: false,
+		dom: '<"card-body border-bottom py-3"<"d-flex"<"text-secondary"l><"ms-auto text-secondary"f>>>' +
+			'<"table-responsive"tr>' +
+			'<"card-footer d-flex align-items-center"<"m-0 text-secondary"i><"pagination m-0 ms-auto"p>>',
 		ajax: {
 			url: "{{ url('sample', kwargs={'action': 'list'}) }}",
 			type: 'POST',

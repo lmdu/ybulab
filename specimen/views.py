@@ -143,7 +143,7 @@ def sample(request, action):
 				)
 				filter_count = samples.count()
 
-			rows = [[s.id, s.sample_code, s.sample_name, s.species.species_en] \
+			rows = [[s.id, s.sample_code, s.sample_name, s.species.species_en, s.species.species_cn] \
 				for s in samples[start:start+length]]
 
 			return JsonResponse({
@@ -160,6 +160,9 @@ def sample(request, action):
 
 		elif request.method == 'POST':
 			form = SampleForm(request.POST)
+			#photos = request.POST.getlist('photos')
+			#attachments = request.POST.getlist('attachments')
+
 			if form.is_valid():
 				s = form.save(commit=False)
 				s.creator = request.user
@@ -173,6 +176,19 @@ def sample(request, action):
 	elif action == 'delete':
 		pass
 
+	elif action == 'view':
+		if request.method == 'GET':
+			sid = int(request.GET.get('sid', 0))
+			sample = Sample.objects.get(pk=sid)
 
+			pids = [int(i) for i in sample.photos]
+			aids = [int(j) for j in sample.attachments]
 
+			photos = Resource.objects.filter(pk__in=pids)
+			attachments = Resource.objects.filter(pk__in=aids)
 
+			return render(request, 'sample-view.html', {
+				'sample': sample,
+				'photos': photos,
+				'attachments': attachments
+			})

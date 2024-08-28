@@ -1,8 +1,11 @@
-from django.forms import ModelForm
+from django import forms
 
 from .models import *
 
-class SampleForm(ModelForm):
+class SampleForm(forms.ModelForm):
+	photos = forms.JSONField(widget=forms.MultipleHiddenInput, required=False)
+	attachments = forms.JSONField(widget=forms.MultipleHiddenInput, required=False)
+
 	class Meta:
 		model = Sample
 		fields = ['sample_code', 'sample_name', 'sample_tissue',
