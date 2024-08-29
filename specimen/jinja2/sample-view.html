@@ -19,43 +19,43 @@
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>样本类型</strong></div>
-				<div class="datagrid-content">{{ sample.sample_type }}</div>
+				<div class="datagrid-content">{{ sample.sample_type or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>来源组织</strong></div>
-				<div class="datagrid-content">{{ sample.sample_tissue }}</div>
+				<div class="datagrid-content">{{ sample.sample_tissue or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>采集地点</strong></div>
-				<div class="datagrid-content">{{ sample.collect_location }}</div>
+				<div class="datagrid-content">{{ sample.collect_location or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>经度</strong></div>
-				<div class="datagrid-content">{{ sample.collect_longitude }}</div>
+				<div class="datagrid-content">{{ sample.collect_longitude or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>纬度</strong></div>
-				<div class="datagrid-content">{{ sample.collect_latitude }}</div>
+				<div class="datagrid-content">{{ sample.collect_latitude or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>海拔(米)</strong></div>
-				<div class="datagrid-content">{{ sample.collect_altitude }}</div>
+				<div class="datagrid-content">{{ sample.collect_altitude or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>采样人员</strong></div>
-				<div class="datagrid-content">{{ sample.collect_people }}</div>
+				<div class="datagrid-content">{{ sample.collect_people or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>采样时间</strong></div>
-				<div class="datagrid-content">{{ sample.collect_date }}</div>
+				<div class="datagrid-content">{{ sample.collect_date or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>存放地点</strong></div>
-				<div class="datagrid-content">{{ sample.store_place }}</div>
+				<div class="datagrid-content">{{ sample.store_place or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>保持方法</strong></div>
-				<div class="datagrid-content">{{ sample.store_method }}</div>
+				<div class="datagrid-content">{{ sample.store_method or "无" }}</div>
 			</div>
 		</div>
 		<h3 class="mt-5">物种信息</h3>
@@ -127,17 +127,28 @@
 
 		{% if photos %}
 		<h3 class="mt-5">图片信息</h3>
-		{% for photo in photos %}
-		<img src="{{ photo.upfile.url }}">
-		{% endfor %}
+		<div class="row row-cols-3 row-cols-md-4 row-cols-lg-6 g-5">
+			{% for photo in photos %}
+			<div class="col">
+				<a data-fslightbox="gallery" href="{{ photo.upfile.url }}">
+					<div class="img-responsive img-responsive-1x1 rounded border" style="background: url({{ photo.upfile.url }});"></div>
+				</a>
+			</div>
+			{% endfor %}
+		</div>
 		{% endif %}
 
 		{% if attachments %}
 		<h3 class="mt-5">附件材料</h3>
 		{% endif %}
 
+		{% if sample.comment %}
 		<h3 class="mt-5">备注信息</h3>
 		<div>{{ sample.comment | safe }}</div>
+		{% endif %}
 	</div>
 </div>
+{% endblock %}
+{% block script %}
+<script src="{{ static('js/fslightbox.js') }}"></script>
 {% endblock %}
