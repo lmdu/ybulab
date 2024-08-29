@@ -131,7 +131,7 @@
 			{% for photo in photos %}
 			<div class="col">
 				<a data-fslightbox="gallery" href="{{ photo.upfile.url }}">
-					<div class="img-responsive img-responsive-1x1 rounded border" style="background: url({{ photo.upfile.url }});"></div>
+					<div class="img-responsive img-responsive-1x1 rounded" style="background-image: url({{ photo.upfile.url }});"></div>
 				</a>
 			</div>
 			{% endfor %}
@@ -140,6 +140,36 @@
 
 		{% if attachments %}
 		<h3 class="mt-5">附件材料</h3>
+		<div class="card">
+			<div class="table-responsive">
+				<table class="table table-vcenter card-table">
+					<thead>
+						<tr>
+							<th class="fs-4">No.</th>
+							<th class="fs-4">文件名</th>
+							<th class="fs-4">文件大小</th>
+							<th class="fs-4">上传时间</th>
+							<th class="fs-4">下载</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for a in attachments %}
+						<tr>
+							<td>{{ loop.index }}</td>
+							<td>{{ a.upfile.name | basename }}</td>
+							<td>{{ a.upfile.size | intcomma }}</td>
+							<td>{{ a.uptime | date("Y-m-d") }} {{ a.uptime | time("H:i") }}</td>
+							<td>
+								<div class="btn-list flex-nowrap">
+									<a href="{{ a.upfile.url }}" class="btn btn-sm">下载</a>
+								</div>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
 		{% endif %}
 
 		{% if sample.comment %}
