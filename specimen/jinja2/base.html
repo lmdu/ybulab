@@ -45,7 +45,7 @@
             <div class="container-xl">
               <ul class="navbar-nav">
                 <li class="nav-item {% if mainmenu == 'index' %}active{% endif %}">
-                  <a class="nav-link" href="./" >
+                  <a class="nav-link" href="{{ url('index') }}" >
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
                     </span>
@@ -54,8 +54,8 @@
                     </span>
                   </a>
                 </li>
-                <li class="nav-item {% if mainmenu == 'sample' %}active{% endif %}">
-                  <a class="nav-link" href="">
+                <li class="nav-item {% if mainmenu == 'sample' %}active{% endif %} dropdown">
+                  <a class="nav-link dropdown-toggle" href="#navbar-sample" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" /><path d="M12 12l8 -4.5" /><path d="M12 12l0 9" /><path d="M12 12l-8 -4.5" /><path d="M16 5.25l-8 4.5" /></svg>
                     </span>
@@ -63,6 +63,10 @@
                       样本库
                     </span>
                   </a>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url('sample', kwargs={'action': 'list'}) }}">样本列表</a>
+                    <a class="dropdown-item" href="{{ url('sample', kwargs={'action': 'add'}) }}">添加样本</a>
+                  </div>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="./form-elements.html" >

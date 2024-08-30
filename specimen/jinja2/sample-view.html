@@ -57,6 +57,21 @@
 				<div class="datagrid-title fs-4"><strong>保持方法</strong></div>
 				<div class="datagrid-content">{{ sample.store_method or "无" }}</div>
 			</div>
+			<div class="datagrid-item">
+				<div class="datagrid-title fs-4"><strong>样本状态</strong></div>
+				<div class="datagrid-content">
+					{% if sample.status == 0 %}
+					<span class="badge bg-secondary me-1"></span>
+					{% elif sample.status == 1 %}
+					<span class="badge bg-success me-1"></span>
+					{% elif sample.status == 2 %}
+					<span class="badge bg-azure me-1"></span>
+					{% elif sample.status == 3 %}
+					<span class="badge bg-danger me-1"></span>
+					{% endif %}
+					{{ sample.get_status_display() }}
+				</div>
+			</div>
 		</div>
 		<h3 class="mt-5">物种信息</h3>
 		<div class="datagrid">
@@ -124,9 +139,44 @@
 				</div>
 			</div>
 		</div>
+		<h3 class="mt-5">维护人员</h3>
+		<div class="datagrid">
+			<div class="datagrid-item">
+				<div class="datagrid-title fs-4"><strong>录入人员</strong></div>
+				<div class="datagrid-content">
+					<span class="avatar avatar-xs me-1 rounded" style="background-image:url({{
+						cravatar(sample.creator.email) }})"></span>
+					{{ sample.creator.last_name }}{{ sample.creator.first_name }}
+				</div>
+			</div>
+			<div class="datagrid-item">
+				<div class="datagrid-title fs-4"><strong>联系信息</strong></div>
+				<div class="datagrid-content">
+					{{ sample.creator.email }}
+				</div>
+			</div>
+			<div class="datagrid-item">
+				<div class="datagrid-title fs-4"><strong>录入时间</strong></div>
+				<div class="datagrid-content">
+					{{ sample.created | date("Y-m-d") }}
+					{{ sample.created | time("H:i") }}
+				</div>
+			</div>
+			<div class="datagrid-item">
+				<div class="datagrid-title fs-4"><strong>最后更新</strong></div>
+				<div class="datagrid-content">
+					{{ sample.updated | date("Y-m-d") }}
+					{{ sample.updated | time("H:i") }}
+				</div>
+			</div>
+		</div>
+		{% if sample.comment %}
+		<h3 class="mt-5">备注信息</h3>
+		<div class="lh-lg">{{ sample.comment | safe }}</div>
+		{% endif %}
 
 		{% if photos %}
-		<h3 class="mt-5">图片信息</h3>
+		<h3 class="mt-5">图片材料</h3>
 		<div class="row row-cols-3 row-cols-md-4 row-cols-lg-6 g-5">
 			{% for photo in photos %}
 			<div class="col">
@@ -156,12 +206,18 @@
 						{% for a in attachments %}
 						<tr>
 							<td>{{ loop.index }}</td>
-							<td>{{ a.upfile.name | basename }}</td>
+							<td>
+								<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-text"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 9l1 0" /><path d="M9 13l6 0" /><path d="M9 17l6 0" /></svg>
+								{{ a.upfile.name | basename }}
+							</td>
 							<td>{{ a.upfile.size | intcomma }}</td>
 							<td>{{ a.uptime | date("Y-m-d") }} {{ a.uptime | time("H:i") }}</td>
 							<td>
 								<div class="btn-list flex-nowrap">
-									<a href="{{ a.upfile.url }}" class="btn btn-sm">下载</a>
+									<a href="{{ a.upfile.url }}" class="btn btn-sm">
+										<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-download"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+										下载
+									</a>
 								</div>
 							</td>
 						</tr>
@@ -170,11 +226,6 @@
 				</table>
 			</div>
 		</div>
-		{% endif %}
-
-		{% if sample.comment %}
-		<h3 class="mt-5">备注信息</h3>
-		<div>{{ sample.comment | safe }}</div>
 		{% endif %}
 	</div>
 </div>

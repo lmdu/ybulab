@@ -116,6 +116,13 @@ class Specimen(models.Model):
 
 
 class Sample(models.Model):
+	STATUS = (
+		(0, "无"),
+		(1, "在库"),
+		(2, "在用"),
+		(3, "用完")
+	)
+
 	sample_code = models.CharField(max_length=30, blank=True)
 	sample_name = models.CharField(max_length=50, blank=True)
 	sample_type = models.CharField(max_length=30, blank=True)
@@ -131,6 +138,7 @@ class Sample(models.Model):
 	comment = models.TextField(blank=True)
 	photos = models.JSONField(blank=True, default=[])
 	attachments = models.JSONField(blank=True, default=[])
+	status = models.SmallIntegerField(choices=STATUS, default=0)
 	species = models.ForeignKey(Species, on_delete=models.CASCADE)
 	creator = models.ForeignKey(User, on_delete=models.CASCADE)
 	updated = models.DateTimeField(auto_now=True)

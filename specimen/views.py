@@ -143,7 +143,7 @@ def sample(request, action):
 				)
 				filter_count = samples.count()
 
-			rows = [[s.id, s.sample_code, s.sample_name, s.species.species_en, s.species.species_cn] \
+			rows = [[s.id, s.sample_code, s.sample_name, s.sample_tissue, s.species.species_en, s.species.species_cn] \
 				for s in samples[start:start+length]]
 
 			return JsonResponse({

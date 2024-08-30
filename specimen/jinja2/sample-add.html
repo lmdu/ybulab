@@ -96,6 +96,17 @@
 					<input type="text" name="store_method" class="form-control">
 				</div>
 			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">样本状态</label>
+					<select class="form-control form-select">
+						<option value="0">无</option>
+						<option value="1">在库</option>
+						<option value="2">在用</option>
+						<option value="3">用完</option>
+					</select>
+				</div>
+			</div>
 			<div class="col-md-12 col-sm-12">
 				<div class="mb-3">
 					<h3 class="card-title mt-3"><strong>备注信息</strong></h3>
@@ -196,7 +207,8 @@
       toolbar: 'undo redo | formatselect | ' +
         'bold italic backcolor | alignleft aligncenter ' +
         'alignright alignjustify | bullist numlist outdent indent | ' +
-        'link table | removeformat' 
+        'link table | removeformat',
+      contextmenu: "paste copy",
     });
   });
 </script>
