@@ -1,16 +1,16 @@
-{% set mainmenu="sample" %}
+{% set mainmenu="specimen" %}
 {% extends "base.html" %}
-{% block title %}样本信息{% endblock %}
+{% block title %}标本信息{% endblock %}
 {% block main %}
 <div class="card">
 	<div class="card-header">
-		<h2 class="card-title"><strong>样本信息</strong></h2>
+		<h2 class="card-title"><strong>标本信息</strong></h2>
 		{% if request.user.profile.identity > 1 %}
 		<div class="card-actions">
-			{% if request.user.profile.identity == 2 and request.user.id == sample.creator.id %}
-			<a href="{{ url('sample', kwargs={'action': 'edit'}) }}?sid={{ sample.id }}" class="btn btn-secondary">编辑</a>
+			{% if request.user.profile.identity == 2 and request.user.id == specimen.creator.id %}
+			<a href="{{ url('specimen', kwargs={'action': 'edit'}) }}?sid={{ specimen.id }}" class="btn btn-secondary">编辑</a>
 			{% elif request.user.profile.identity > 2 %}
-			<a href="{{ url('sample', kwargs={'action': 'edit'}) }}?sid={{ sample.id }}" class="btn btn-secondary">编辑</a>
+			<a href="{{ url('specimen', kwargs={'action': 'edit'}) }}?sid={{ specimen.id }}" class="btn btn-secondary">编辑</a>
 			{% endif %}
 		</div>
 		{% endif %}
@@ -19,76 +19,72 @@
 		<h3>基本信息</h3>
 		<div class="datagrid">
 			<div class="datagrid-item">
-				<div class="datagrid-title fs-4"><strong>样本编号</strong></div>
-				<div class="datagrid-content">{{ sample.sample_code }}</div>
+				<div class="datagrid-title fs-4"><strong>标本编号</strong></div>
+				<div class="datagrid-content">{{ specimen.specimen_code }}</div>
 			</div>
 			<div class="datagrid-item">
-				<div class="datagrid-title fs-4"><strong>样本名称</strong></div>
-				<div class="datagrid-content">{{ sample.sample_name }}</div>
+				<div class="datagrid-title fs-4"><strong>标本名称</strong></div>
+				<div class="datagrid-content">{{ specimen.specimen_name }}</div>
 			</div>
 			<div class="datagrid-item">
-				<div class="datagrid-title fs-4"><strong>样本类型</strong></div>
-				<div class="datagrid-content">{{ sample.sample_type or "无" }}</div>
-			</div>
-			<div class="datagrid-item">
-				<div class="datagrid-title fs-4"><strong>来源组织</strong></div>
-				<div class="datagrid-content">{{ sample.sample_tissue or "无" }}</div>
+				<div class="datagrid-title fs-4"><strong>性别</strong></div>
+				<div class="datagrid-content">{{ specimen.get_specimen_gender_display() }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>采集地点</strong></div>
-				<div class="datagrid-content">{{ sample.collect_location or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.collect_location or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>经度</strong></div>
-				<div class="datagrid-content">{{ sample.collect_longitude or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.collect_longitude or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>纬度</strong></div>
-				<div class="datagrid-content">{{ sample.collect_latitude or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.collect_latitude or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>海拔(米)</strong></div>
-				<div class="datagrid-content">{{ sample.collect_altitude or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.collect_altitude or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>采样人员</strong></div>
-				<div class="datagrid-content">{{ sample.collect_people or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.collect_people or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>采样时间</strong></div>
-				<div class="datagrid-content">{{ sample.collect_date or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.collect_date or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>存放地点</strong></div>
-				<div class="datagrid-content">{{ sample.store_place or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.store_place or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>保持方法</strong></div>
-				<div class="datagrid-content">{{ sample.store_method or "无" }}</div>
+				<div class="datagrid-content">{{ specimen.store_method or "无" }}</div>
 			</div>
 			<div class="datagrid-item">
-				<div class="datagrid-title fs-4"><strong>样本状态</strong></div>
+				<div class="datagrid-title fs-4"><strong>标本状态</strong></div>
 				<div class="datagrid-content">
-					{% if sample.status == 0 %}
+					{% if specimen.status == 0 %}
 					<span class="badge bg-secondary me-1"></span>
-					{% elif sample.status == 1 %}
+					{% elif specimen.status == 1 %}
 					<span class="badge bg-success me-1"></span>
-					{% elif sample.status == 2 %}
+					{% elif specimen.status == 2 %}
 					<span class="badge bg-azure me-1"></span>
-					{% elif sample.status == 3 %}
+					{% elif specimen.status == 3 %}
 					<span class="badge bg-danger me-1"></span>
 					{% endif %}
-					{{ sample.get_status_display() }}
+					{{ specimen.get_status_display() }}
 				</div>
 			</div>
 		</div>
 
-		{% if sample.collect_longitude and sample.collect_latitude %}
+		{% if specimen.collect_longitude and specimen.collect_latitude %}
 		<h3 class="mt-5">采集地图</h3>
 		<div class="card">
 			<div class="ratio ratio-21x9">
 				<div>
-					<div id="sample-map" class="w-100 h-100 rounded"></div>
+					<div id="specimen-map" class="w-100 h-100 rounded"></div>
 				</div>
 			</div>
 		</div>
@@ -101,7 +97,7 @@
 					<span class="ms-2">Kingdom</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.kingdom_cn }} / {{ sample.species.kingdom_en }}
+					{{ specimen.species.kingdom_cn }} / {{ specimen.species.kingdom_en }}
 				</div>
 			</div>
 			<div class="datagrid-item">
@@ -110,7 +106,7 @@
 					<span class="ms-2">Phylum</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.phylum_cn }} / {{ sample.species.phylum_en }}
+					{{ specimen.species.phylum_cn }} / {{ specimen.species.phylum_en }}
 				</div>
 			</div>
 			<div class="datagrid-item">
@@ -119,7 +115,7 @@
 					<span class="ms-2">Class</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.class_cn }} / {{ sample.species.class_en }}
+					{{ specimen.species.class_cn }} / {{ specimen.species.class_en }}
 				</div>
 			</div>
 			<div class="datagrid-item">
@@ -128,7 +124,7 @@
 					<span class="ms-2">Order</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.oder_cn }} / {{ sample.species.oder_en }}
+					{{ specimen.species.order_cn }} / {{ specimen.species.order_en }}
 				</div>
 			</div>
 			<div class="datagrid-item">
@@ -137,7 +133,7 @@
 					<span class="ms-2">Family</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.family_cn }} / {{ sample.species.family_en }}
+					{{ specimen.species.family_cn }} / {{ specimen.species.family_en }}
 				</div>
 			</div>
 			<div class="datagrid-item">
@@ -146,7 +142,7 @@
 					<span class="ms-2">Genus</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.genus_cn }} / {{ sample.species.genus_en }}
+					{{ specimen.species.genus_cn }} / {{ specimen.species.genus_en }}
 				</div>
 			</div>
 			<div class="datagrid-item">
@@ -155,7 +151,7 @@
 					<span class="ms-2">Species</span>
 				</div>
 				<div class="datagrid-content">
-					{{ sample.species.species_cn }} / <em>{{ sample.species.species_en }}</em>
+					{{ specimen.species.species_cn }} / <em>{{ specimen.species.species_en }}</em>
 				</div>
 			</div>
 		</div>
@@ -165,34 +161,34 @@
 				<div class="datagrid-title fs-4"><strong>录入人员</strong></div>
 				<div class="datagrid-content">
 					<span class="avatar avatar-xs me-1 rounded" style="background-image:url({{
-						cravatar(sample.creator.email) }})"></span>
-					{{ sample.creator.last_name }}{{ sample.creator.first_name }}
+						cravatar(specimen.creator.email) }})"></span>
+					{{ specimen.creator.last_name }}{{ specimen.creator.first_name }}
 				</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>联系信息</strong></div>
 				<div class="datagrid-content">
-					{{ sample.creator.email }}
+					{{ specimen.creator.email }}
 				</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>录入时间</strong></div>
 				<div class="datagrid-content">
-					{{ sample.created | date("Y-m-d") }}
-					{{ sample.created | time("H:i") }}
+					{{ specimen.created | date("Y-m-d") }}
+					{{ specimen.created | time("H:i") }}
 				</div>
 			</div>
 			<div class="datagrid-item">
 				<div class="datagrid-title fs-4"><strong>最后更新</strong></div>
 				<div class="datagrid-content">
-					{{ sample.updated | date("Y-m-d") }}
-					{{ sample.updated | time("H:i") }}
+					{{ specimen.updated | date("Y-m-d") }}
+					{{ specimen.updated | time("H:i") }}
 				</div>
 			</div>
 		</div>
-		{% if sample.comment %}
+		{% if specimen.comment %}
 		<h3 class="mt-5">备注信息</h3>
-		<div class="lh-lg">{{ sample.comment | safe }}</div>
+		<div class="lh-lg">{{ specimen.comment | safe }}</div>
 		{% endif %}
 
 		{% if photos %}
@@ -254,12 +250,12 @@
 <script src="{{ static('js/fslightbox.js') }}"></script>
 <script src="http://api.tianditu.gov.cn/api?v=4.0&tk=806cc48733c69d54539534bc5e17d379" type="text/javascript"></script>
 <script type="text/javascript">
-	var map = new T.Map('sample-map');
-	var point = new T.LngLat({{ sample.collect_longitude }}, {{ sample.collect_latitude }});
+	var map = new T.Map('specimen-map');
+	var point = new T.LngLat({{ specimen.collect_longitude }}, {{ specimen.collect_latitude }});
 	map.centerAndZoom(point, 12);
 	var marker = new T.Marker(point);
 	map.addOverLay(marker);
-	var minfowin = new T.InfoWindow("{{ sample.sample_code }}");
+	var minfowin = new T.InfoWindow("{{ specimen.sample_code }}");
 	marker.addEventListener('click', function(){
 		marker.openInfoWindow(minfowin);
 	});

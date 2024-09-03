@@ -1,41 +1,40 @@
-{% set mainmenu="sample" %}
+{% set mainmenu="specimen" %}
 {% extends "base.html" %}
-{% block title %}添加样本{% endblock %}
+{% block title %}添加标本{% endblock %}
 {% block head %}
 <link href="{{ static('css/select2.min.css') }}" rel="stylesheet"/>
 <link href="{{ static('css/dropzone.min.css') }}" rel="stylesheet"/>
 <link href="{{ static('css/tabler-vendors.min.css') }}" rel="stylesheet">
 {% endblock %}
 {% block main %}
-<form action="{{ url('sample', kwargs={'action': 'add'}) }}" id="sample-form" method="post" class="card">
+<form action="{{ url('specimen', kwargs={'action': 'add'}) }}" id="specimen-form" method="post" class="card">
 	<div class="card-header">
-		<h2 class="card-title"><strong>添加样本</strong></h2>
+		<h2 class="card-title"><strong>添加标本</strong></h2>
 	</div>
 	<div class="card-body">
 		<div class="row row-cards">
 			<h3 class="card-title mb-0 mt-3"><strong>基本信息</strong></h3>
 			<div class="col-md-3 col-sm-6">
 				<div class="mb-3">
-					<label class="form-label required">样本编号</label>
-					<input type="text" name="sample_code" class="form-control">
+					<label class="form-label required">标本编号</label>
+					<input type="text" name="specimen_code" class="form-control">
 				</div>
 			</div>
 			<div class="col-md-3 col-sm-6">
 				<div class="mb-3">
-					<label class="form-label required">样本名称</label>
-					<input type="text" name="sample_name" class="form-control">
+					<label class="form-label required">标本名称</label>
+					<input type="text" name="specimen_name" class="form-control">
 				</div>
 			</div>
 			<div class="col-md-3 col-sm-6">
 				<div class="mb-3">
-					<label class="form-label">样本类型</label>
-					<input type="text" name="sample_type" class="form-control">
-				</div>
-			</div>
-			<div class="col-md-3 col-sm-6">
-				<div class="mb-3">
-					<label class="form-label">来源组织</label>
-					<input type="text" name="sample_tissue" class="form-control">
+					<label class="form-label">性别</label>
+					<select class="form-control form-select" name="specimen_gender">
+						{% set genders = {0: "无", 1: "雄性", 2: "雌性"} %}
+						{% for k, v in genders.items() %}
+						<option value="{{ k }}">{{ v }}</option>
+						{% endfor %}
+					</select>
 				</div>
 			</div>
 			<div class="col-md-12 col-sm-12">
@@ -99,7 +98,7 @@
 			<div class="col-md-3 col-sm-6">
 				<div class="mb-3">
 					<label class="form-label">样本状态</label>
-					<select class="form-control form-select">
+					<select class="form-control form-select" name="status">
 						<option value="0">无</option>
 						<option value="1">在库</option>
 						<option value="2">在用</option>
@@ -162,7 +161,7 @@
 			},
 			init: function(){
 				this.on('success', function(file, data) {
-					$('<input>').appendTo('#sample-form')
+					$('<input>').appendTo('#specimen-form')
 						.attr({
 							'type': 'hidden',
 							'id': file.upload.uuid,
@@ -177,27 +176,27 @@
 			}
 		});
 
-		$('#sample-form').validate({
+		$('#specimen-form').validate({
         normalizer: function(value) {
           return $.trim(value);
         },
         errorClass: 'is-invalid',
         validClass: 'is-valid',
         rules: {
-          sample_code: {
+          specimen_code: {
             required: true,
             remote: {
             	url: "{{ url('validate') }}",
             	type: "post",
             	headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
               data: {
-                sampleid: function() {
-                  return $('input[name=sample_code]').val();
+                specimenid: function() {
+                  return $('input[name=specimen_code]').val();
                 }
               }
             }
           },
-          sample_name: {
+          specimen_name: {
             required: true,
           },
           species: {
@@ -205,7 +204,7 @@
           }
         },
         messages: {
-        	sample_code: {
+        	specimen_code: {
         		remote: "编号已存在"
         	}
         }

@@ -1,0 +1,154 @@
+{% set mainmenu="species" %}
+{% extends "base.html" %}
+{% block title %}修改物种信息{% endblock %}
+{% block head %}
+<link href="{{ static('css/select2.min.css') }}" rel="stylesheet"/>
+<link href="{{ static('css/tabler-vendors.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block main %}
+<form action="{{ url('species', kwargs={'action': 'edit'}) }}" id="species-form" method="post" class="card">
+	<div class="card-header">
+		<h2 class="card-title"><strong>修改物种信息</strong></h2>
+	</div>
+	<div class="card-body">
+		<div class="row row-cards">
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>界 / Kingdom</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">界中文名</label>
+					<input type="text" name="kingdom_cn" class="form-control" value="{{ species.kingdom_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">界英文名</label>
+					<input type="text" name="kingdom_en" class="form-control" value="{{ species.kingdom_en }}">
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>门 / Phylum</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">门中文名</label>
+					<input type="text" name="phylum_cn" class="form-control" value="{{ species.phylum_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">门英文名</label>
+					<input type="text" name="phylum_en" class="form-control" value="{{ species.phylum_en }}">
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>纲 / Class</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">纲中文名</label>
+					<input type="text" name="class_cn" class="form-control" value="{{ species.class_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">纲英文名</label>
+					<input type="text" name="class_en" class="form-control" value="{{ species.class_en }}">
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>目 / Order</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">目中文名</label>
+					<input type="text" name="order_cn" class="form-control" value="{{ species.order_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">目英文名</label>
+					<input type="text" name="order_en" class="form-control" value="{{ species.order_en }}">
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>科 / Family</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">科中文名</label>
+					<input type="text" name="family_cn" class="form-control" value="{{ species.family_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">科英文名</label>
+					<input type="text" name="family_en" class="form-control" value="{{ species.family_en }}">
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>属 / Genus</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">属中文名</label>
+					<input type="text" name="genus_cn" class="form-control" value="{{ species.genus_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">属英文名</label>
+					<input type="text" name="genus_en" class="form-control" value="{{ species.genus_en }}">
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-12">
+				<div class="mb-3"><strong>种 / Phylum</strong></div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">种中文名</label>
+					<input type="text" name="species_cn" class="form-control" value="{{ species.species_cn }}">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label required">种英文名</label>
+					<input type="text" name="species_en" class="form-control" value="{{ species.species_en }}">
+				</div>
+			</div>
+			<input type="hidden" name="sid" value="{{ species.id }}">
+			{{ csrf_input }}
+		</div>
+	</div>
+	<div class="card-footer text-end">
+		<button type="submit" class="btn btn-primary">提交</button>
+	</div>
+</form>
+{% endblock %}
+{% block script %}
+<script src="{{ static('js/select2.min.js') }}"></script>
+<script src="{{ static('js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#species-form').validate({
+      normalizer: function(value) {
+        return $.trim(value);
+      },
+      errorClass: 'is-invalid',
+      validClass: 'is-valid',
+      rules: {
+        species_en: {
+          required: true
+        }
+      }
+    });
+});
+</script>
+{% endblock %}

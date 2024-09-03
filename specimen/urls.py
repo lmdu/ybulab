@@ -9,11 +9,14 @@ urlpatterns = [
 	path('signin', views.signin, name='signin'),
 	path('signup', views.signup, name='signup'),
 	path('signout', views.signout, name='signout'),
-	path('reset', views.reset, name='reset'),
 	path('validate', views.validate, name='validate'),
-	path('species', views.species, name='species'),
 	path('upload', views.upload, name='upload'),
+	path('species/<action>', views.species, name='species'),
 	path('sample/<action>', views.sample, name='sample'),
+	path('specimen/<action>', views.specimen, name='specimen'),
+	path('customer/<action>', views.customer, name='customer'),
+	path('profile/<action>', views.profile, name='profile'),
+	path('setpass/<action>', views.setpass, name='setpass'),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,159 @@
+{% set mainmenu="settings" %}
+{% extends "base.html" %}
+{% block title %}帐号设置{% endblock %}
+{% block head %}
+<link href="{{ static('css/tabler-vendors.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block main %}
+<div class="card">
+  <div class="row g-0">
+    <div class="col-12 col-md-3 border-end">
+      <div class="card-body">
+        <h4 class="subheader">帐号信息</h4>
+        <div class="list-group list-group-transparent">
+          <a href="{{ url('profile', kwargs={'action': 'view'}) }}" class="list-group-item list-group-item-action d-flex align-items-center active">我的帐号</a>
+          <a href="{{ url('setpass', kwargs={'action': 'view'}) }}" class="list-group-item list-group-item-action d-flex align-items-center">修改密码</a>
+        </div>
+        <h4 class="subheader mt-4">其它信息</h4>
+        <div class="list-group list-group-transparent">
+          
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-9 d-flex flex-column">
+      <form action="{{ url('profile', kwargs={'action': 'edit'}) }}" method="post">
+        <div class="card-body">
+          <h2 class="mb-4">我的帐号</h2>
+          <h3 class="card-title"><strong>头像</strong></h3>
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <span class="avatar avatar-xl" style="background-image: url({{ cravatar(user.email) }})"></span>
+            </div>
+            <div class="col-auto">
+              <a href="https://cravatar.cn/avatars" class="btn" target="_blank">
+                修改头像
+              </a>
+            </div>
+          </div>
+          <h3 class="card-title mt-4"><strong>基本信息</strong></h3>
+          <div class="row g-3">
+            <div class="col-md-4 col-sm-6">
+              <div class="form-label">用户名</div>
+              <input type="text" class="form-control" name="username" disabled value="{{ request.user.username }}">
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="form-label">姓氏</div>
+              <input type="text" class="form-control" name="last_name" value="{{ request.user.last_name }}">
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="form-label">名字</div>
+              <input type="text" class="form-control" name="first_name" value="{{ request.user.first_name }}">
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="form-label">邮箱</div>
+              <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="form-label">电话</div>
+              <input type="text" class="form-control" name="phone" value="{{ request.user.profile.phone }}">
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="form-label">专业</div>
+              <input type="text" class="form-control" name="major" value="{{ request.user.profile.major }}">
+            </div>
+          </div>
+          <h3 class="card-title mt-4"><strong>状态信息</strong></h3>
+          <div class="row g-3">
+            <div class="col-md-4 col-sm-6">
+              <label class="form-label">头衔</label>
+              <select class="form-control form-select" name="title">
+                {% set titles = {0: "无", 1: "教授", 2: "研究员", 3: "副教授", 4: "副研究员", 5: "讲师", 6: "助理研究员"} %}
+                {% for k, v in titles.items() %}
+                <option value="{{ k }}" {% if k == request.user.profile.title %}selected{% endif %}>{{ v }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <label class="form-label">学位</label>
+              <select class="form-control form-select" name="degree">
+                {% set degrees = {0: "无", 1: "博士", 2: "硕士", 3: "学士"} %}
+                {% for k, v in degrees.items() %}
+                <option value="{{ k }}" {% if k == request.user.profile.degree %}selected{% endif %}>{{ v }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <label class="form-label">职位</label>
+              <select class="form-control form-select" name="position">
+                {% set positions = {0: "无", 1: "教职工", 2: "博士后", 2: "学生"} %}
+                {% for k, v in positions.items() %}
+                <option value="{{ k }}" {% if k == request.user.profile.position %}selected{% endif %}>{{ v }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <h3 class="card-title mt-4"><strong>个人简介</strong></h3>
+          <p class="card-subtitle">这里可以编写长段的个人简介信息</p>
+          <div class="row">
+            <div class="col-12">
+              <textarea class="form-control" name="resume" id="tinymce-default">{{ request.user.profile.resume }}</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent mt-auto">
+          <div class="btn-list justify-content-end">
+            <button type="Submit" class="btn btn-primary">
+              保存
+            </button>
+          </div>
+        </div>
+        <input type="hidden" name="uid" value="{{ request.user.id }}">
+        {{ csrf_input }}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{{ static('js/select2.min.js') }}"></script>
+<script src="{{ static('js/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ static('js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#customer-form').validate({
+    normalizer: function(value) {
+      return $.trim(value);
+    },
+    errorClass: 'is-invalid',
+    validClass: 'is-valid',
+    rules: {
+      last_name: {
+        required: true
+      },
+      first_name: {
+        required: true
+      },
+      email: {
+        required: true,
+        email: true
+      }
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  tinyMCE.init({
+    selector: '#tinymce-default',
+    height: 300,
+    menubar: false,
+    statusbar: false,
+    plugins: 'advlist autolink lists link table',
+    toolbar: 'undo redo | formatselect | ' +
+      'bold italic backcolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'link table | removeformat',
+    contextmenu: "paste copy",
+  });
+});
+</script>
+{% endblock %}

@@ -9,7 +9,7 @@ from django.template.defaultfilters import time, date
 
 from jinja2 import Environment
 
-def cravatar(email, size=40):
+def cravatar(email, size=100):
     return "https://cravatar.cn/avatar/{}?{}".format(
         hashlib.md5(email.lower().encode('utf-8')).hexdigest(),
         urllib.parse.urlencode({'s': str(size)})

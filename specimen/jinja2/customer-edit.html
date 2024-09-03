@@ -1,0 +1,161 @@
+{% set mainmenu="customer" %}
+{% extends "base.html" %}
+{% block title %}修改用户信息{% endblock %}
+{% block head %}
+<link href="{{ static('css/select2.min.css') }}" rel="stylesheet"/>
+<link href="{{ static('css/tabler-vendors.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block main %}
+<form action="{{ url('customer', kwargs={'action': 'edit'}) }}" id="customer-form" method="post" class="card">
+	<div class="card-header">
+		<h2 class="card-title"><strong>修改用户信息</strong></h2>
+	</div>
+	<div class="card-body">
+		<div class="row row-cards">
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">用户名</label>
+					<input type="text" name="username" disabled class="form-control" value="{{ customer.username }}">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">邮箱</label>
+					<input type="text" name="email" class="form-control" value="{{ customer.email }}">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">姓</label>
+					<input type="text" name="last_name" class="form-control" value="{{ customer.last_name }}">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">名字</label>
+					<input type="text" name="first_name" class="form-control" value="{{ customer.first_name }}">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">专业</label>
+					<input type="text" name="major" class="form-control" value="{{ customer.profile.major }}">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">电话</label>
+					<input type="text" name="phone" class="form-control" value="{{ customer.profile.phone }}">
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">头衔</label>
+					<select class="form-control form-select" name="title">
+						{% set titles = {0: "无", 1: "教授", 2: "研究员", 3: "副教授", 4: "副研究员", 5: "讲师", 6: "助理研究员"} %}
+						{% for k, v in titles.items() %}
+						<option value="{{ k }}" {% if k == customer.profile.title %}selected{% endif %}>{{ v }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">学位</label>
+					<select class="form-control form-select" name="degree">
+						{% set degrees = {0: "无", 1: "博士", 2: "硕士", 3: "学士"} %}
+						{% for k, v in degrees.items() %}
+						<option value="{{ k }}" {% if k == customer.profile.degree %}selected{% endif %}>{{ v }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">职位</label>
+					<select class="form-control form-select" name="position">
+						{% set positions = {0: "无", 1: "教职工", 2: "博士后", 2: "学生"} %}
+						{% for k, v in positions.items() %}
+						<option value="{{ k }}" {% if k == customer.profile.position %}selected{% endif %}>{{ v }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">状态</label>
+					<select class="form-control form-select" name="status">
+						{% set statuss = {0: "无", 1: "在职", 2: "离职", 3: "在读", 4: "毕业", 5: "退学"} %}
+						{% for k, v in statuss.items() %}
+						<option value="{{ k }}" {% if k == customer.profile.status %}selected{% endif %}>{{ v }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			{% if request.user.profile.identity == 4 %}
+			<div class="col-md-3 col-sm-6">
+				<div class="mb-3">
+					<label class="form-label">权限</label>
+					<select class="form-control form-select" name="identity">
+						{% set groups = {0: "未激活", 1: "访客", 2: "编辑", 3: "管理员", 4: "超级管理员"} %}
+						{% for k, v in groups.items() %}
+						<option value="{{ k }}" {% if k == customer.profile.identity %}selected{% endif %}>{{ v }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			{% endif %}
+			<div class="col-md-12 col-sm-12">
+				<div class="mb-3">
+					<label class="form-label">个人简介</label>
+					<textarea class="form-control" name="resume" id="tinymce-default">{{ customer.profile.resume }}</textarea>
+				</div>
+			</div>
+			<input type="hidden" name="uid" value="{{ customer.id }}">
+			{{ csrf_input }}
+		</div>
+	</div>
+	<div class="card-footer text-end">
+		<button type="submit" class="btn btn-primary">提交</button>
+	</div>
+</form>
+{% endblock %}
+{% block script %}
+<script src="{{ static('js/select2.min.js') }}"></script>
+<script src="{{ static('js/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ static('js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#customer-form').validate({
+    normalizer: function(value) {
+      return $.trim(value);
+    },
+    errorClass: 'is-invalid',
+    validClass: 'is-valid',
+    rules: {
+      last_name: {
+        required: true
+      },
+      first_name: {
+      	required: true
+      }
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  tinyMCE.init({
+    selector: '#tinymce-default',
+    height: 300,
+    menubar: false,
+    statusbar: false,
+    plugins: 'advlist autolink lists link table',
+    toolbar: 'undo redo | formatselect | ' +
+      'bold italic backcolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'link table | removeformat',
+    contextmenu: "paste copy",
+  });
+});
+</script>
+{% endblock %}

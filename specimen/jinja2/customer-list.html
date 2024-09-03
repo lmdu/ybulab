@@ -1,6 +1,6 @@
-{% set mainmenu="sample" %}
+{% set mainmenu="species" %}
 {% extends "base.html" %}
-{% block title %}样本列表{% endblock %}
+{% block title %}用户列表{% endblock %}
 {% block head %}
 <!--<link href="{{ static('css/datatables.min.css') }}" rel="stylesheet">-->
 {% endblock %}
@@ -9,27 +9,22 @@
 	<div class="col-12">
 		<div class="card">
 			<div class="card-header">
-				<h3 class="card-title"><strong>样本列表</strong></h3>
-				{% if request.user.profile.identity > 1 %}
-				<div class="card-actions">
-					<a href="{{ url('sample', kwargs={'action': 'add'}) }}" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
-                        添加样本
-                    </a>
-				</div>
-				{% endif %}
+				<h3 class="card-title"><strong>用户列表</strong></h3>
 			</div>
-			<table class="table card-table table-vcenter text-nowrap" id="sample-table">
+			<table class="table card-table table-vcenter text-nowrap" id="user-table">
 				<thead>
 					<tr>
 						<th class="fs-4">ID</th>
-						<th class="fs-4">样本编号</th>
-						<th class="fs-4">样本名称</th>
-						<th class="fs-4">来源组织</th>
-						<th class="fs-4">物种拉丁名</th>
-						<th class="fs-4">物种中文名</th>
-						<th class="fs-4">采样地点</th>
-						<th class="fs-4">存放点</th>
+						<th class="fs-4">用户名</th>
+						<th class="fs-4">邮箱</th>
+						<th class="fs-4">姓名</th>
+						<th class="fs-4">电话</th>
+						<th class="fs-4">头衔</th>
+						<th class="fs-4">学位</th>
+						<th class="fs-4">职位</th>
+						<th class="fs-4">专业</th>
+						<th class="fs-4">状态</th>
+						<th class="fs-4">权限</th>
 						<th class="fs-4">操作</th>
 					</tr>
 				</thead>
@@ -38,21 +33,21 @@
 	</div>
 </div>
 
-<div class="modal modal-blur fade" id="delete-sample-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal modal-blur fade" id="delete-user-dialog" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-status bg-danger"></div>
       <div class="modal-body text-center py-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
-        <h3>你确定要删除样本 <span id="delete-sample-code"></span>?</h3>
-        <div class="text-secondary">样本一但删除, 不能被找回, 请慎重!</div>
+        <h3>你确定要删除用户 <span id="delete-user-code"></span>?</h3>
+        <div class="text-secondary">用户一但删除, 不能被找回, 请慎重!</div>
       </div>
       <div class="modal-footer">
         <div class="w-100">
           <div class="row">
             <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">取消</a></div>
-            <div class="col"><a href="#" id="delete-sample-ok" class="btn btn-danger w-100" data-bs-dismiss="modal">确认</a></div>
+            <div class="col"><a href="#" id="delete-user-ok" class="btn btn-danger w-100" data-bs-dismiss="modal">确认</a></div>
           </div>
         </div>
       </div>
@@ -65,29 +60,29 @@
 <script src="{{ static('js/datatables.min.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	var table = $('#sample-table').DataTable({
+	var table = $('#user-table').DataTable({
 		processing: true,
 		serverSide: true,
 		dom: '<"card-body border-bottom py-3"<"d-flex"<"text-secondary"l><"ms-auto text-secondary"f>>>' +
 			'<"table-responsive"tr>' +
 			'<"card-footer d-flex align-items-center"<"m-0 text-secondary"i><"pagination m-0 ms-auto"p>>',
 		ajax: {
-			url: "{{ url('sample', kwargs={'action': 'list'}) }}",
+			url: "{{ url('customer', kwargs={'action': 'list'}) }}",
 			type: 'POST',
 			headers: {'X-CSRFToken': '{{ csrf_token }}'}
 		}
 	});
 
-	$(document).on('click', 'button.delete-sample', function(e){
+	$(document).on('click', 'button.delete-user', function(e){
 		e.preventDefault();
-		$('#delete-sample-code').text($(this).parent().siblings().eq(1).text());
-		var sample_id = $(this).data('target');
-		$('#delete-sample-ok').click(function(){
+		$('#delete-user-code').html($(this).parent().siblings().eq(1).html());
+		var user_id = $(this).data('target');
+		$('#delete-user-ok').click(function(){
 			$.ajax({
-				url: "{{ url('sample', kwargs={'action': 'delete'}) }}",
+				url: "{{ url('customer', kwargs={'action': 'delete'}) }}",
 				type: "post",
 				data: {
-					sid: sample_id,
+					uid: user_id,
 				},
 				headers: {'X-CSRFToken': '{{ csrf_token }}'},
 				success: function() {
