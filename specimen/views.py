@@ -311,7 +311,7 @@ def customer(request, action):
 						user.id
 					))
 
-					if user.profile.identity < 4:
+					if request.user.profile.identity < 4:
 						buttons.append('<button data-target="{}" class="ms-2 btn btn-sm btn-outline-danger delete-user" data-bs-toggle="modal" data-bs-target="#delete-user-dialog">删除</button>'.format(
 							user.id
 						))

@@ -205,7 +205,7 @@
 			width: '100%',
 			minimumInputLength: 1,
 			ajax: {
-				url: "{{ url('species') }}",
+				url: "{{ url('species', kwargs={'action': 'select'}) }}",
 				delay: 250,
 				dataType: 'json',
 				data: function(params) {
